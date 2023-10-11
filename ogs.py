@@ -30,7 +30,6 @@ def timelog(time):
 		print("timelog file missing...creating timelog file...")
 		WriteTime(tlog,time)
 
-
 def pagefetch():
 	page = urlopen(url)
 	html_bytes = page.read()
