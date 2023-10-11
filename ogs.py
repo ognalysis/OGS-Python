@@ -4,6 +4,8 @@ from datetime import datetime
 import re
 import os
 import wget
+import csv
+from itertools import islice
 
 furl = datetime.now().strftime("%Y") + ".csv"
 url = "https://wichita.ogs.ou.edu/eq/catalog/2023/"
@@ -60,8 +62,17 @@ def WGETfile(urlpath, fpath):
 	fullpath = urlpath + fpath
 	wget.download(fullpath, out="./")
 
+def parsecsv():
+	f = open(furl, newline='')
+	#r = csv.reader(f, delimiter=',')
+	#print(next(islice(r, 0, 10)))
+	c = f.readlines()
+	print(c[10])
+
+
 # Main
 #time = pagefetch()
 #timelog(time)
 
-WGETfile(url, furl)
+#WGETfile(url, furl)
+parsecsv()
