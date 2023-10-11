@@ -1,8 +1,11 @@
 from pathlib import Path
 from urllib.request import urlopen
+from datetime import datetime
 import re
 import os
+import wget
 
+furl = datetime.now().strftime("%Y") + ".csv"
 url = "https://wichita.ogs.ou.edu/eq/catalog/2023/"
 restr = r"\.csv\<.*(20[0-9][0-9]-[0-9][0-9]-[0-9][0-9]\s[0-9][0-9]:[0-9][0-9])"
 tlog = Path("./timelog")
@@ -50,5 +53,15 @@ def WriteTime(path, time):
 	f.write(time)
 	f.close()
 
-time = pagefetch()
-timelog(time)
+def WGETfile(urlpath, fpath):
+	if DoesFileExist("./" + fpath):
+		print("csv exists already.")
+		os.remove(fpath)
+	fullpath = urlpath + fpath
+	wget.download(fullpath, out="./")
+
+# Main
+#time = pagefetch()
+#timelog(time)
+
+WGETfile(url, furl)
