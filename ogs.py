@@ -11,6 +11,7 @@ furl = datetime.now().strftime("%Y") + ".csv"
 url = "https://wichita.ogs.ou.edu/eq/catalog/2023/"
 restr = r"\.csv\<.*(20[0-9][0-9]-[0-9][0-9]-[0-9][0-9]\s[0-9][0-9]:[0-9][0-9])"
 tlog = Path("./timelog")
+csvregex = r"^.*(2023-10-17\s[0-9][0-9]:[0-9][0-9]:[0-9][0-9]),([0-9]\.[0-9]),[A-Z]{1,},[a-zA-Z]{1,},([-+]?[0-9]*\.[0-9]*),([-+]?[0-9]*\.[0-9]*),.*(Oklahoma),(\D*),\w*$"
 
 # logic outline:
 # scrape page for timestamp
@@ -25,15 +26,19 @@ def timelog(time):
 		if IsFileEmpty(tlog):
 			print("file empty...writing time...")
 			WriteTime(tlog,time)
+			return True
 		elif time == open(tlog).read():
 			print("contents unchanged.")
+			return False
 		else:
 			#if file contents not match, update with latest timestamp
 			print("file outdated...updating...")
 			WriteTime(tlog,time)
+			return True
 	else:
 		print("timelog file missing...creating timelog file...")
 		WriteTime(tlog,time)
+		return True
 
 def pagefetch():
 	page = urlopen(url)
@@ -58,21 +63,43 @@ def WriteTime(path, time):
 def WGETfile(urlpath, fpath):
 	if DoesFileExist("./" + fpath):
 		print("csv exists already.")
+		print(fpath)
 		os.remove(fpath)
 	fullpath = urlpath + fpath
 	wget.download(fullpath, out="./")
 
+
+# TODO CSV Parsing logic
 def parsecsv():
+	print("\nstarting CSV Parse...")
 	f = open(furl, newline='')
 	#r = csv.reader(f, delimiter=',')
 	#print(next(islice(r, 0, 10)))
 	c = f.readlines()
-	print(c[10])
+	#pattern = f'({tlog})'
+	for line in c:
+		#print(line)
+		if re.match(csvregex,line):
+			print("New Entry:" + line)
 
 
 # Main
-#time = pagefetch()
+time = pagefetch()
 #timelog(time)
 
-#WGETfile(url, furl)
+
+# if time has been changed since last check, WGET new CSV, and parse for new entries
+# else, do nothing
+
+"""
+if (timelog(time)):
+	print("true")
+	WGETfile(url, furl)
+	parsecsv()
+else:
+	print("false")
+"""
+
+WGETfile(url, furl)
 parsecsv()
+
