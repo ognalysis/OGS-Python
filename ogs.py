@@ -6,6 +6,14 @@ import os
 import wget
 import csv
 from itertools import islice
+import argparse
+
+now = str(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+ap = argparse.ArgumentParser(description='date search')
+ap.add_argument('--date', action="store", dest='algo_date', default=now)
+args = ap.parse_args()
+
+print("Arguments Passed:" + args.algo_date)
 
 furl = datetime.now().strftime("%Y") + ".csv"
 url = "https://wichita.ogs.ou.edu/eq/catalog/2023/"
@@ -106,4 +114,3 @@ else:
 
 WGETfile(url, furl)
 parsecsv()
-
