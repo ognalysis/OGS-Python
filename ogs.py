@@ -21,6 +21,10 @@ csvregex = r"^.*(2023-10-17\s[0-9][0-9]:[0-9][0-9]:[0-9][0-9]),([0-9]\.[0-9]),[A
 # if not different, quit
 # if different, run remaining code to grab CSV values (TBD)
 
+#TODO:
+# Add condition to allow selecting entries based on date passed to script (std. yyyy-MM-dd hh:mm)
+# or Add condition to find x most recent entries if nothing new is found.
+
 def timelog(time):
 	if DoesFileExist(tlog):
 		if IsFileEmpty(tlog):
